@@ -1,17 +1,16 @@
 CONFIG_FILE = "config.json"
 
 from typing import List
-from .pefe_common.config import Config
-
-nested_item_schema = {
-    "name": (str, None),
-    "value": (int, None)
-}
+from pefe_common.config import Config
 
 schema = {
     "self": ({
         "host": (str, None),
-        "port": (int, 8080)
+        "port": (int, None),
+        "benign_dir": (str, None),
+        "malicious_dir": (str, None),
+        "error_log_file": (str, "./error_log.txt"),
+        "max_retries": (int, 5),
     }, None),
 
     "debug": (bool, False),

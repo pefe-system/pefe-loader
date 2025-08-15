@@ -1,6 +1,12 @@
 {
     "self": {
         "host": "localhost",
-        "port": 4000
-    }
+        "port": 4000,
+        "benign_dir": "/absolute/path/to/dir/containing/benign/samples",
+        "malicious_dir": "/absolute/path/to/dir/containing/malicious/samples" ,
+        "error_log_file": "optional ; defaults to ./error_log.txt",
+        "max_retries": 5
+    },
+
+    "debug": true
 }
