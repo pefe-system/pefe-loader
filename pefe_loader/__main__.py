@@ -1,10 +1,11 @@
 import os
 import time
 from . import *
-from .loader import Loader
+from .loader import AbstractLoader, SpreadFileLoader, SingleFileLoader
 from .distributor import Distributor
 from .error_reporter import ErrorReporter
 from pefe_common.petools import is_pe_file
+from typing import Type
 
 def generate_contents():
     BENIGN = 0
@@ -32,6 +33,30 @@ def main():
     content_generator = generate_contents()
     def next_content():
         return next(content_generator)
+    
+    Loader = AbstractLoader # type: Type[AbstractLoader]
+    LOADER_OPTIONS = {
+        "1": SingleFileLoader,
+        "2": SpreadFileLoader,
+    } # type: dict[str, Type[AbstractLoader]]
+    options_text = ", ".join(
+        (f"{option}={loader_class.__name__}" for option, loader_class in LOADER_OPTIONS.items())
+    )
+    while True:
+        ans = input(f"Enter loader type ({options_text}, 0=display help on this): ")
+        if ans == '0':
+            for loader_class in LOADER_OPTIONS.values():
+                print(loader_class.__name__, ":")
+                print(loader_class.__doc__)
+                print()
+            continue
+        try:
+            Loader = LOADER_OPTIONS[ans]
+        except KeyError:
+            print("Unexpected answer. Try again.")
+        else:
+            break
+
     loader = Loader(next_content)
     error_reporter = ErrorReporter()
     distributor = Distributor(loader, error_reporter)
@@ -47,8 +72,8 @@ def main():
     finally:
         print()
         print("Stopping... ", end="", flush=True)
-        distributor.stop()
         loader.stop()
+        distributor.stop()
         print("Done.")
 
 if __name__ == "__main__":

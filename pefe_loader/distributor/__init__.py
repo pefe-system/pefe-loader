@@ -1,14 +1,14 @@
 from ..config import *
 from pefe_common.messaging.json import JSONServer, JSONSocket
 from ..error_reporter import ErrorReporter
-from ..loader import Loader
+from ..loader import AbstractLoader
 import time
 
 MAX_RETRIES = config['self']['max_retries']
 
 class Distributor(JSONServer):
     def __init__(self, loader, error_reporter):
-        # type: (JSONServer, Loader, ErrorReporter) -> None
+        # type: (JSONServer, AbstractLoader, ErrorReporter) -> None
         host = config["self"]["host"]
         port = config["self"]["port"]
         super().__init__(host, port)
